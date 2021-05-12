@@ -3,16 +3,6 @@ from pypresence import Presence
 
 import random, json, time, asyncio
 
-# This is the client ID, change it if you want ¯\_(ツ)_/¯
-token = '837934057273819147'
-
-# Here you uh do things?
-RPC = Presence(token)
-RPC.connect()
-print('Rich Presence connected succesfully!')
-
-
-
 # Here we open the json file with all the strings
 def importData(file):
     loadedFile = open(file)
@@ -23,6 +13,18 @@ statusFile = 'statusList.json'
 linksFile = 'linkList.json'
 imagesFile = 'imagesList.json'
 phrasesFile = 'phrasesList.json'
+configFile = 'config.json'
+
+config = importData(configFile)
+
+
+# This is the client ID, you can change it in config.json
+token = config["token"]
+
+# Here you uh do things?
+RPC = Presence(token)
+RPC.connect()
+print('Rich Presence connected succesfully!')
 
 
 # Defining things
@@ -35,14 +37,13 @@ prevCycles = 0
 
 # This is what updates the rich presence
 while True:
-    # Updating the data so you don't have to rerun the 
+    # Updating the data so you don't have to re-run the 
     # script when you add new things
     statusList = importData(statusFile)
     linksList = importData(linksFile)
     imagesList = importData(imagesFile)
     phrasesList = importData(phrasesFile)
-
-    # what will be d Here we defineisplayed
+    config = importData(configFile)
 
     # Run once every two loops
     if prevCycles == 3 or prevCycles == 0:
@@ -50,11 +51,12 @@ while True:
         bigImageText = 'Theo says: "' + random.choice(phrasesList) + '"'
         prevCycles = 1
 
+    # Here we define what will displayed
     smallImage = 'heart'
-    smallImageText = 'Have a great day!'
-    mainText = 'Theo is currently...'
+    smallImageText = config["smallImageText"]
+    mainText = config["mainText"]
     smallText = random.choice(statusList)
-    buttonText = "Take me to a random place"
+    buttonText = config["buttonText"]
     buttonURL = random.choice(linksList)
 
 
@@ -70,7 +72,7 @@ while True:
     buttons=[{"label":buttonText, "url":buttonURL}]
     )
 
-    prevCycles = prevCycles + 1
+    prevCycles += 1
 
     # And we wait a little before updating again
     time.sleep(30)
