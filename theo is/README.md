@@ -3,7 +3,7 @@ Discord Rich Presence thing that displays cycling things
 #
 ## Instructions
 
-1. [Get](https://www.python.org/downloads/) Python
+1. Get [Python](https://www.python.org/downloads/)
 2. Get [PyPresence](https://pypi.org/project/pypresence/)
 ```
 pip install pypresence
