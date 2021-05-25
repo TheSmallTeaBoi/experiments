@@ -9,6 +9,9 @@ def importData(file):
     data = json.load(loadedFile)
     return data
 
+def exitApp(error):
+    print('[ERROR]' + error)
+
 statusFile = 'statusList.json'
 linksFile = 'linkList.json'
 imagesFile = 'imagesList.json'
@@ -23,16 +26,14 @@ token = config["token"]
 
 # Here you uh do things?
 RPC = Presence(token)
-RPC.connect()
-print('Rich Presence connected succesfully!')
+try:
+    RPC.connect()
+    print('Rich Presence connected succesfully!')
+except ConnectionRefusedError or AssertionError:
+    print('[ERROR] Something went wrong while trying to connect to Discord, is Discord open?\n')
+    exit
 
-
-# Defining things
-def dumpData():
-    with open(fileData, 'w') as f:
-        json.dump(statusList, f)
-
-# This thing kind of uh does things too
+# thing kind of uh does things too
 prevCycles = 0
 
 # This is what updates the rich presence
@@ -60,17 +61,21 @@ while True:
     buttonURL = random.choice(linksList)
 
 
-    # Here is where we actually update the rich presence
-
-    RPC.update(
-    large_image = bigImage,
-    large_text = bigImageText,
-    small_image = smallImage,
-    small_text = smallImageText,
-    details = mainText,
-    state = smallText,
-    buttons=[{"label":buttonText, "url":buttonURL}]
-    )
+    # Here is where we actually update the rich presence, with some kind of
+    # slight error handling
+    try:
+        RPC.update(
+        large_image = bigImage,
+        large_text = bigImageText,
+        small_image = smallImage,
+        small_text = smallImageText,
+        details = mainText,
+        state = smallText,
+        buttons=[{"label":buttonText, "url":buttonURL}]
+        )
+    except ConnectionRefusedError or AssertionError:
+        print('[ERROR] Something went wrong while trying to connect to Discord, is Discord open?\n')
+        exit
 
     prevCycles += 1
 
